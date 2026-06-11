@@ -1,9 +1,14 @@
-
 import { getUserIDs, getListenEvents, getSong } from "./data.mjs";
 import {
-  getMostListenedSong, getMostListenedArtist, getTopGenres, getLongestStreak,
-  getMostListenedSongByTime, getMostListenedArtistByTime, getFridayNightEvents, getSongsListenedEveryDay
-} from "./common.mjs"
+  getMostListenedSong,
+  getMostListenedArtist,
+  getTopGenres,
+  getLongestStreak,
+  getMostListenedSongByTime,
+  getMostListenedArtistByTime,
+  getFridayNightEvents,
+  getSongsListenedEveryDay,
+} from "./common.mjs";
 
 const select = document.getElementById("userSelect");
 const users = getUserIDs();
@@ -31,32 +36,23 @@ function renderUser(userID) {
     return;
   }
 
-
-
   // Display Most Listened Song
   const toSongID = getMostListenedSong(events);
+  const topSongTimeID = getMostListenedSongByTime(events, getSong);
+
+  // Most listened artist
   const song = getSong(toSongID);
   const topArtist = getMostListenedArtist(events, getSong);
-  // Calculate genres
-  const topGenres = getTopGenres(events, getSong);
-  // Calculate streak
-  const streak = getLongestStreak(events);
-  const streakSong = getSong(streak.songID);
-
-  const topSongTimeID = getMostListenedSongByTime(events, getSong);
-  const topSongTime = getSong(topSongTimeID);
   const topArtistTime = getMostListenedArtistByTime(events, getSong);
 
-  // Get Friday-night events
+  // Get friday night songs
   const fridayEvents = getFridayNightEvents(events);
   let fridaySongHTML = "";
   let fridaySongTimeHTML = "";
   if (fridayEvents.length > 0) {
-    const fridaySongID =
-      getMostListenedSong(fridayEvents);
+    const fridaySongID = getMostListenedSong(fridayEvents);
 
-    const fridaySong =
-      getSong(fridaySongID);
+    const fridaySong = getSong(fridaySongID);
     const fridaySongTimeID = getMostListenedSongByTime(fridayEvents, getSong);
     const fridaySongTime = getSong(fridaySongTimeID);
     fridaySongHTML = `
@@ -80,14 +76,17 @@ function renderUser(userID) {
   </p>
 </section>
 `;
-
   }
+
+  // Longest streak song
+     const streak = getLongestStreak(events);
+  const streakSong = getSong(streak.songID);
+
   // songs get listen evry day
   const everyDaySongs = getSongsListenedEveryDay(events);
   let everyDayHTML = "";
   if (everyDaySongs.length > 0) {
-
-    const names = everyDaySongs.map(songID => {
+    const names = everyDaySongs.map((songID) => {
       const song = getSong(songID);
 
       return `${song.artist} - ${song.title}`;
@@ -101,46 +100,49 @@ function renderUser(userID) {
   `;
   }
 
+  // Top genres
+  const topGenres = getTopGenres(events, getSong);
+  const topSongTime = getSong(topSongTimeID);
+
   // update the UI
   results.innerHTML = `
   <h2>User ${userID}</h2>
-
-  <section>
-    <h3>Most listened song</h3>
+<section>
+    <h3>Most listened song(count)</h3>
     <p>${song.artist} - ${song.title}</p>
   </section>
-
+<section>
+  <h3>Most listened song (time)</h3>
+  <p>
+    ${topSongTime.artist} 
+    ${topSongTime.title}
+  </p>
+     </section>
   <section>
-    <h3>Most listened artist</h3>
+    <h3>Most listened artist(count)</h3>
     <p>${topArtist}</p>
   </section>
+<section>
+  <h3>Most listened artist (time)</h3>
+  <p>${topArtistTime}</p>
+</section>
 
-  <section>
-    <h3>Top genres</h3>
-    <p>${topGenres.join(", ")}</p>
-  </section>
-  <section>
+${fridaySongHTML}
+ ${fridaySongTimeHTML}
+ <section>
   <h3>Longest streak song</h3>
   <p>
     ${streakSong.artist} - ${streakSong.title}
     (length: ${streak.length})
   </p>
 </section>
-<section>
-  <h3>Most listened song (time)</h3>
-  <p>
-    ${topSongTime.artist} -
-    ${topSongTime.title}
-  </p>
-</section>
 
-<section>
-  <h3>Most listened artist (time)</h3>
-  <p>${topArtistTime}</p>
-</section>
- ${fridaySongHTML}
-  ${fridaySongTimeHTML}
   ${everyDayHTML}
+  <section>
+    <h3>Top genres</h3>
+    <p>${topGenres.join(", ")}</p>
+  </section>
+
 `;
 }
 
@@ -149,5 +151,3 @@ renderUser(users[0]);
 select.addEventListener("change", () => {
   renderUser(select.value);
 });
-
-

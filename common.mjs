@@ -1,16 +1,16 @@
 // Finds the key with the highest value.
-function getWinner(values) {
-    let winner = null;
+function getMostFrequent(values) {
+    let mostFrequent;
     let max = 0;
 
     for (const key in values) {
         if (values[key] > max) {
             max = values[key];
-            winner = key;
+            mostFrequent = key;
         }
     }
 
-    return winner;
+    return mostFrequent;
 }
 // Counts how many times a song appears.
 function countBy(events, getKey) {
@@ -24,7 +24,7 @@ function countBy(events, getKey) {
     return counts;
 }
 
-function totalBy(events, getKey, getValue) {
+function getCountBy(events, getKey, getValue) {
     const totals = {};
 
     for (const event of events) {
@@ -40,14 +40,35 @@ function totalBy(events, getKey, getValue) {
 
 // Most listened song (count)
 function getMostListenedSong(events) {
-    return getWinner(
+    return getMostFrequent(
         countBy(events, event => event.song_id)
+    );
+}
+// Most listened song by time
+function getMostListenedSongByTime(events, getSong) {
+    return getMostFrequent(
+        getCountBy(
+            events,
+            event => event.song_id,
+            event => getSong(event.song_id).duration_seconds
+        )
+    );
+}
+
+// Most listened artist by time
+function getMostListenedArtistByTime(events, getSong) {
+    return getMostFrequent(
+        getCountBy(
+            events,
+            event => getSong(event.song_id).artist,
+            event => getSong(event.song_id).duration_seconds
+        )
     );
 }
 
 // Most listened artist (count)
 function getMostListenedArtist(events, getSong) {
-    return getWinner(
+    return getMostFrequent(
         countBy(
             events,
             event => getSong(event.song_id).artist
@@ -55,19 +76,26 @@ function getMostListenedArtist(events, getSong) {
     );
 }
 
-// Top 3 genres
-function getTopGenres(events, getSong) {
-    const counts = countBy(
-        events,
-        event => getSong(event.song_id).genre
-    );
 
-    return Object.entries(counts)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 3)
-        .map(([genre]) => genre);
+// Friday night events
+function getFridayNightEvents(events) {
+    return events.filter(event =>
+        isFridayNight(event.timestamp)
+    );
 }
 
+// Friday night checker
+function isFridayNight(timestamp) {
+    const date = new Date(timestamp);
+
+    const day = date.getDay();
+    const hour = date.getHours();
+
+    return (
+        (day === 5 && hour >= 17) ||
+        (day === 6 && hour < 4)
+    );
+}
 // Longest consecutive streak of the same song
 function getLongestStreak(events) {
     if (events.length === 0) {
@@ -102,48 +130,6 @@ function getLongestStreak(events) {
     };
 }
 
-// Most listened song by time
-function getMostListenedSongByTime(events, getSong) {
-    return getWinner(
-        totalBy(
-            events,
-            event => event.song_id,
-            event => getSong(event.song_id).duration_seconds
-        )
-    );
-}
-
-// Most listened artist by time
-function getMostListenedArtistByTime(events, getSong) {
-    return getWinner(
-        totalBy(
-            events,
-            event => getSong(event.song_id).artist,
-            event => getSong(event.song_id).duration_seconds
-        )
-    );
-}
-
-// Friday night checker
-function isFridayNight(timestamp) {
-    const date = new Date(timestamp);
-
-    const day = date.getDay();
-    const hour = date.getHours();
-
-    return (
-        (day === 5 && hour >= 17) ||
-        (day === 6 && hour < 4)
-    );
-}
-
-// Friday night events
-function getFridayNightEvents(events) {
-    return events.filter(event =>
-        isFridayNight(event.timestamp)
-    );
-}
-
 // Songs listened to every day
 function getSongsListenedEveryDay(events) {
     if (events.length === 0) {
@@ -169,6 +155,18 @@ function getSongsListenedEveryDay(events) {
         songID =>
             songDays[songID].size === allDays.size
     );
+}
+// Top genres
+function getTopGenres(events, getSong) {
+    const counts = countBy(
+        events,
+        event => getSong(event.song_id).genre
+    );
+
+    return Object.entries(counts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([genre]) => genre);
 }
 
 
