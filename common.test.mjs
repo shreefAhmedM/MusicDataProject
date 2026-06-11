@@ -8,30 +8,20 @@ test("returns longest streak of 3", () => {
     { song_id: "a" },
     { song_id: "b" },
     { song_id: "b" },
-    { song_id: "b" }
+    { song_id: "b" },
   ];
 
-  assert.deepStrictEqual(
-    getLongestStreak(events),
-    {
-      songID: "b",
-      length: 3
-    }
-  );
+  assert.deepStrictEqual(getLongestStreak(events), {
+    songID: "b",
+    length: 3,
+  });
 });
 
 test("returns longest streak of 2", () => {
-  const events = [
-    { song_id: "x" },
-    { song_id: "x" },
-    { song_id: "y" }
-  ];
+  const events = [{ song_id: "x" }, { song_id: "x" }, { song_id: "y" }];
 
-     assert.deepStrictEqual(
-    getLongestStreak(events),
-    {
-      songID: "x",
-      length: 2
-    }
-  );
+  assert.deepStrictEqual(getLongestStreak(events), {
+    songID: "x",
+    length: 2,
+  });
 });

@@ -101,7 +101,7 @@ function renderUser(userID) {
     // update the UI
     results.innerHTML = `
   <h2>User ${userID}</h2>
-<section>
+  <section>
     <h3>Most listened song(count)</h3>
     <p>${song.artist} - ${song.title}</p>
   </section>
