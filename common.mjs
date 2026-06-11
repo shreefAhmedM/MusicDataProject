@@ -1,4 +1,4 @@
-// Finds the key with the highest value.
+// Finds the key with the highest value
 function getMostFrequent(values) {
   let mostFrequent;
   let max = 0;
@@ -12,7 +12,7 @@ function getMostFrequent(values) {
 
   return mostFrequent;
 }
-// Counts how many times a song appears.
+// Counts how many times a song appears
 function countBy(events, getKey) {
   const counts = {};
 
