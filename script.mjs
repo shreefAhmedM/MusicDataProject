@@ -6,9 +6,8 @@ import {
 } from "./common.mjs"
 
 const select = document.getElementById("userSelect");
-
 const users = getUserIDs();
-
+// create a dropdown option for each user
 for (const userID of users) {
   const option = document.createElement("option");
 
@@ -18,12 +17,11 @@ for (const userID of users) {
   select.appendChild(option);
 }
 
-
 // Show selected user's listen count
 const results = document.getElementById("results");
 
+// handle users and Updates the page
 function renderUser(userID) {
-
   const events = getListenEvents(userID);
   // Handle User 4
   if (events.length === 0) {
@@ -32,10 +30,7 @@ function renderUser(userID) {
     `;
     return;
   }
-  results.innerHTML = `
-    <h2>User ${userID}</h2>
-    <p>Total listens: ${events.length}</p>
-  `;
+
 
 
   // Display Most Listened Song
@@ -154,4 +149,5 @@ renderUser(users[0]);
 select.addEventListener("change", () => {
   renderUser(select.value);
 });
+
 

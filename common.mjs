@@ -1,3 +1,4 @@
+// Finds the key with the highest value.
 function getWinner(values) {
     let winner = null;
     let max = 0;
@@ -11,7 +12,7 @@ function getWinner(values) {
 
     return winner;
 }
-
+// Counts how many times a song appears.
 function countBy(events, getKey) {
     const counts = {};
 
@@ -38,14 +39,14 @@ function totalBy(events, getKey, getValue) {
 }
 
 // Most listened song (count)
-export function getMostListenedSong(events) {
+function getMostListenedSong(events) {
     return getWinner(
         countBy(events, event => event.song_id)
     );
 }
 
 // Most listened artist (count)
-export function getMostListenedArtist(events, getSong) {
+function getMostListenedArtist(events, getSong) {
     return getWinner(
         countBy(
             events,
@@ -55,7 +56,7 @@ export function getMostListenedArtist(events, getSong) {
 }
 
 // Top 3 genres
-export function getTopGenres(events, getSong) {
+function getTopGenres(events, getSong) {
     const counts = countBy(
         events,
         event => getSong(event.song_id).genre
@@ -68,7 +69,7 @@ export function getTopGenres(events, getSong) {
 }
 
 // Longest consecutive streak of the same song
-export function getLongestStreak(events) {
+function getLongestStreak(events) {
     if (events.length === 0) {
         return null;
     }
@@ -102,7 +103,7 @@ export function getLongestStreak(events) {
 }
 
 // Most listened song by time
-export function getMostListenedSongByTime(events, getSong) {
+function getMostListenedSongByTime(events, getSong) {
     return getWinner(
         totalBy(
             events,
@@ -113,7 +114,7 @@ export function getMostListenedSongByTime(events, getSong) {
 }
 
 // Most listened artist by time
-export function getMostListenedArtistByTime(events, getSong) {
+function getMostListenedArtistByTime(events, getSong) {
     return getWinner(
         totalBy(
             events,
@@ -124,7 +125,7 @@ export function getMostListenedArtistByTime(events, getSong) {
 }
 
 // Friday night checker
-export function isFridayNight(timestamp) {
+function isFridayNight(timestamp) {
     const date = new Date(timestamp);
 
     const day = date.getDay();
@@ -137,14 +138,14 @@ export function isFridayNight(timestamp) {
 }
 
 // Friday night events
-export function getFridayNightEvents(events) {
+function getFridayNightEvents(events) {
     return events.filter(event =>
         isFridayNight(event.timestamp)
     );
 }
 
 // Songs listened to every day
-export function getSongsListenedEveryDay(events) {
+function getSongsListenedEveryDay(events) {
     if (events.length === 0) {
         return [];
     }
@@ -168,4 +169,17 @@ export function getSongsListenedEveryDay(events) {
         songID =>
             songDays[songID].size === allDays.size
     );
+}
+
+
+// exports function to be used in anthor file
+export {
+    getMostListenedSong,
+    getMostListenedArtist,
+    getTopGenres,
+    getLongestStreak,
+    getMostListenedSongByTime,
+    getMostListenedArtistByTime,
+    getFridayNightEvents,
+    getSongsListenedEveryDay
 }
