@@ -1,7 +1,7 @@
 import assert from "node:assert";
 import test from "node:test";
 import { getLongestStreak } from "./common.mjs";
-
+// get the longest streak
 test("returns longest streak of 3", () => {
   const events = [
     { song_id: "a" },
@@ -27,7 +27,7 @@ test("returns longest streak of 2", () => {
     { song_id: "y" }
   ];
 
-  assert.deepStrictEqual(
+     assert.deepStrictEqual(
     getLongestStreak(events),
     {
       songID: "x",
